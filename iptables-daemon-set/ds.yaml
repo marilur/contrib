@@ -1,0 +1,25 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: fix-iptables
+  labels:
+    app: fix-iptables
+    version: v1
+spec:
+  template:
+    metadata:
+      labels:
+        name: fix-iptables
+    spec:
+      hostNetwork: true
+      containers:
+        - resources:
+          securityContext:
+            privileged: true
+          env:
+            - name: DEST_SUBNET
+              value: "10.123.0.0/16"
+          image: gcr.io/bowei-gke-dev/fix-iptables:1.0
+          imagePullPolicy: Always
+          name: fix-iptables
+          command: [ "/fix-iptables.sh" ]
